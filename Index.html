@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Design Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0066FF;
+            --primary-dark: #0052CC;
+            --secondary: #FF3366;
+            --accent: #00D9FF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #666666;
+            --text-light: #FFFFFF;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8F9FA;
+            --bg-dark: #0A0A0A;
+            --border: rgba(26, 26, 26, 0.08);
+            --shadow-light: 0 0.25rem 1rem rgba(0, 0, 0, 0.04);
+            --shadow-medium: 0 0.5rem 2rem rgba(0, 0, 0, 0.08);
+            --shadow-heavy: 0 1rem 3rem rgba(0, 0, 0, 0.12);
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--secondary) 0%, #FF6B9D 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            overflow-x: hidden;
+            padding-top: 0;
+        }
+
+        .container {
+            max-width: 75rem;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header */
+        header {
+padding: 0.5rem 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            background: transparent;
+            backdrop-filter: none;
+            border-bottom: none;
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(1rem);
+            border-bottom: 0.0625rem solid var(--border);
+            box-shadow: var(--shadow-light);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 3rem 0;
+            opacity: 0;
+            transform: translateY(-1rem);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        header.scrolled nav {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.025em;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -0.25rem;
+            left: 0;
+            width: 0;
+            height: 0.125rem;
+            background: var(--gradient-primary);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 2rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-light);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-0.125rem);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 0.25rem;
+        }
+
+        .menu-toggle span {
+            width: 1.5rem;
+            height: 0.125rem;
+            background: var(--text-primary);
+            transition: all 0.3s ease;
+            border-radius: 0.0625rem;
+        }
+
+        /* Hero Section */
+        .hero {
+padding-top: 5rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: var(--gradient-primary);
+            opacity: 0.03;
+            border-radius: 50% 0 0 50%;
+            transform: translateX(25%);
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.05em;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 3rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-light);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-0.25rem);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .btn-secondary {
+            padding: 1rem 2rem;
+            background: transparent;
+            color: var(--text-primary);
+            text-decoration: none;
+            border: 0.125rem solid var(--border);
+            border-radius: 3rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-secondary:hover {
+            background: var(--text-primary);
+            color: var(--text-light);
+            transform: translateY(-0.25rem);
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 30rem;
+        }
+
+        .hero-card {
+            position: absolute;
+            background: var(--bg-primary);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-medium);
+            padding: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero-card:nth-child(1) {
+            top: 2rem;
+            right: 2rem;
+            width: 12rem;
+            height: 8rem;
+            background: var(--gradient-primary);
+            animation-delay: 0s;
+        }
+
+        .hero-card:nth-child(2) {
+            bottom: 4rem;
+            left: 1rem;
+            width: 10rem;
+            height: 6rem;
+            background: var(--gradient-secondary);
+            animation-delay: 2s;
+        }
+
+        .hero-card:nth-child(3) {
+            top: 6rem;
+            left: 6rem;
+            width: 8rem;
+            height: 8rem;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-1rem) rotate(2deg); }
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+            background: var(--bg-secondary);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 40rem;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--bg-primary);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 0.0625rem solid var(--border);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-0.5rem);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--gradient-primary);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 6rem 0;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+            opacity: 0.1;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+
+        .cta-section p {
+            font-size: 1.125rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            max-width: 30rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-dark);
+            color: var(--text-light);
+            padding: 3rem 0 2rem;
+            border-top: 0.0625rem solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            line-height: 2;
+        }
+
+        .footer-section a:hover {
+            color: var(--text-light);
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 0.0625rem solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            opacity: 0.7;
+        }
+
+        /* Responsive Design using em units for media queries */
+        @media (max-width: 64em) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                text-align: center;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-visual {
+                height: 20rem;
+            }
+        }
+
+        @media (max-width: 48em) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--bg-primary);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: var(--shadow-medium);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-text p {
+                font-size: 1rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .btn-primary, .btn-secondary {
+                padding: 0.875rem 1.5rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 30em) {
+            .hero-text h1 {
+                font-size: 1.75rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                text-align: center;
+                max-width: 15rem;
+            }
+            
+            .feature-card {
+                padding: 2rem;
+            }
+        }
+
+        /* Animation classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(2rem);
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(2rem);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .animate-on-scroll.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">Nexus</a>
+            <ul class="nav-links">
+                <li><a href="#work">Work</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <a href="#" class="cta-btn">Get Started</a>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="fade-in">Design that moves the world forward</h1>
+                        <p class="fade-in">We craft exceptional digital experiences that connect brands with people through purposeful design and seamless interactions.</p>
+                        <div class="hero-buttons fade-in">
+                            <a href="#" class="btn-primary">Start Your Project</a>
+                            <a href="#" class="btn-secondary">View Our Work</a>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="hero-card"></div>
+                        <div class="hero-card"></div>
+                        <div class="hero-card"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="services">
+            <div class="container">
+                <div class="section-header animate-on-scroll">
+                    <h2>What we do best</h2>
+                    <p>From concept to completion, we deliver design solutions that drive results and create lasting impact for your brand.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">🎨</div>
+                        <h3>Brand Identity</h3>
+                        <p>Distinctive visual identities that capture your brand's essence and resonate with your target audience across all touchpoints.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">💻</div>
+                        <h3>Digital Experiences</h3>
+                        <p>User-centered websites and applications that combine beautiful design with intuitive functionality and seamless performance.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">📱</div>
+                        <h3>Mobile Design</h3>
+                        <p>Responsive and native mobile experiences optimized for engagement, usability, and conversion across all devices.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Motion Graphics</h3>
+                        <p>Dynamic animations and micro-interactions that bring your digital products to life and enhance user engagement.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">🚀</div>
+                        <h3>Strategy & Consulting</h3>
+                        <p>Data-driven design strategies that align with your business goals and deliver measurable results for growth.</p>
+                    </div>
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">🎯</div>
+                        <h3>User Research</h3>
+                        <p>In-depth user insights and testing that inform design decisions and create experiences your users will love.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content animate-on-scroll">
+                    <h2>Ready to transform your brand?</h2>
+                    <p>Let's collaborate to create something extraordinary that drives your business forward and captivates your audience.</p>
+                    <a href="#" class="btn-primary">Start Your Project Today</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Brand Identity</a></li>
+                        <li><a href="#">Web Design</a></li>
+                        <li><a href="#">Mobile Apps</a></li>
+                        <li><a href="#">Consulting</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Work</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Privacy</a></li>
+                        <li><a href="#">Terms</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Dribbble</a></li>
+                        <li><a href="#">Instagram</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Nexus Design Studio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            navLinks.classList.toggle('active');
+            menuToggle.classList.toggle('active');
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with animate-on-scroll class
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            animateElements.forEach(el => observer.observe(el));
+        });
+
+        // Header background and sticky behavior on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            const heroHeight = document.querySelector('.hero').offsetHeight;
+            
+            if (window.scrollY > heroHeight * 0.8) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading animation to buttons
+        document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                    
+                    // Add loading state
+                    const originalText = this.textContent;
+                    this.textContent = 'Loading...';
+                    this.style.opacity = '0.7';
+                    
+                    // Reset after 2 seconds
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                        this.style.opacity = '1';
+                    }, 2000);
+                }
+            });
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const heroCards = document.querySelectorAll('.hero-card');
+            
+            heroCards.forEach((card, index) => {
+                const speed = 0.5 + (index * 0.1);
+                card.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.02}deg)`;
+            });
+        });
+    </script>
+</body>
+</html>
